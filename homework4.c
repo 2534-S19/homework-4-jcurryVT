@@ -1,6 +1,6 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "homework4.h"
-
+//#include "uart.h"
 int main(void)
 {
     char rChar;
@@ -10,13 +10,31 @@ int main(void)
 
 
     // Stops the Watchdog timer.
+    WDT_A_hold(WDT_A_BASE); // pretty sure this is what stops  timer.  dobule check
+
     initBoard();
     // TODO: Declare a UART config struct as defined in uart.h.
     //       To begin, configure the UART for 9600 baud, 8-bit payload (LSB first), no parity, 1 stop bit.
 
+    typedef struct _eUSCI_eUSCI_UART_Config {
+
+        //baud rate maybe??
+        //check with TA or something
+        uartConfig.clockPrescalar = 9;
+        uartConfig.firstModReg = 12;
+        uartConfig.secondModReg = 0x22;
+
+        EUSCI_A_UART_8_BIT_LEN; //8bit payload
+        EUSCI_A_UART_NO_PARITY; //no parity
+        EUSCI_A_UART_ONE_STOP_BIT; //1 stop bit
+
+      };
+
 
     // TODO: Make sure Tx AND Rx pins of EUSCI_A0 work for UART and not as regular GPIO pins.
 
+    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P1,
+            GPIO_PIN2 | GPIO_PIN3, GPIO_PRIMARY_MODULE_FUNCTION);
 
     // TODO: Initialize EUSCI_A0
 
