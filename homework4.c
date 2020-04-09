@@ -1,6 +1,8 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "homework4.h"
 #include "uart.h"
+typedef enum {notThere, oneThere, twoThere, threeThere, allThere} stateMachine;
+
 int main(void)
 {
     char rChar;
@@ -9,7 +11,6 @@ int main(void)
 
 
     // TODO: Declare the variables that main uses to interact with your state machine.
-
     // Stops the Watchdog timer.
     WDT_A_hold(WDT_A_BASE); // pretty sure this is what stops  timer.  dobule check
 
@@ -69,7 +70,9 @@ int main(void)
 
     if (charFSM(rChar)==1)
                 {
-                    transmit_interrupt_flag == UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG);
+                    transmit == UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG);
+
+                    //make this a variable
 
                 }
 
@@ -90,34 +93,52 @@ int main(void)
 //figure out a specifc question for thweattt
     bool charFSM(char rChar)
     {
-        bool finished = false;
+        static stateMachine nowState = notThere;
 
-        static enum //can be seen or not seen
-        {
-            seen, notSeen
-        }
+        bool sendIt = false;
 
-        state = notSeen;
+        switch (nowState) {
+               case notThere:
+                   if (rChar == 2)
+                       nowState = oneThere;
+                   break;
 
-        switch (state)
-        {
-        case notSeen:
+               case oneThere:
+                   if (rChar == 5)
+                       nowState = twoThere;
+                   else
+                       nowState = notThere;
+                   break;
 
-            if (rChar == "2534")
-            {
-                state = seen;
-                finished = true;
-            }
-            break;
+               case twoThere:
+                   if (rChar == 3)
+                       nowState = threeThere;
+                   else
+                       nowState = notThere;
+                   break;
 
-        case seen:
-            if (rChar != "2534")
-            {
-                state = notSeen;
-                finished = false;
-            }
-            break;
-        }
-        //rChar
-        return finished;
+               case threeThere:
+                   if (rChar == 4)
+                   {
+                       nowState = allThere;
+                       sendIt = true;
+                   }
+                   else
+                       nowState = notThere;
+                   break;
+
+               case allThere:
+                   nowState = notThere;
+                   break;
+           }
+
+           if (sendIt)
+           {
+               //display the thing
+           }
+           else
+           {
+               //keep looking
+           }
+        return sendIt;
     }
