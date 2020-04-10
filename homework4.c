@@ -1,14 +1,14 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "homework4.h"
 #include "uart.h"
-typedef enum {notThere, oneThere, twoThere, threeThere, allThere} stateMachine;
+typedef enum {notThere, caseOne, caseTwo, caseThree, allThere} stateMachine;
 
 int main(void)
 {
     char rChar;
     char *response = "\n\n\r2534 is the best course in the curriculum!\r\n\n";
     int count;
-
+    int transmitFlag;
 
     // TODO: Declare the variables that main uses to interact with your state machine.
     // Stops the Watchdog timer.
@@ -52,7 +52,7 @@ int main(void)
         //       Return 0xFF if no character is available.
        // void UART_transmitData(uint32_t moduleInstance, uint_fast8_t transmitData); //RELATIVE TO THE BOARD
 
-    if (( UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG)) == EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG);
+    if (( UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG)) == EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG)
          //how do i use this
     {
         rChar = UART_receiveData(uint32_t moduleInstance); //RECEIVE function
@@ -105,35 +105,40 @@ int main(void)
         switch (nowState) {
                case notThere:
                    if (rChar == 2)
-                       nowState = oneThere;
+                       nowState = caseOne;
                    break;
 
-               case oneThere:
+               case caseOne:
                    if (rChar == 5)
-                       nowState = twoThere;
+                       nowState = caseTwo;
                    else
                        nowState = notThere;
                    break;
 
-               case twoThere:
+               case caseTwo:
                    if (rChar == 3)
-                       nowState = threeThere;
+                       nowState = caseThree;
+                   if (rChar == 2)
+                       nowState = caseOne;
                    else
                        nowState = notThere;
                    break;
 
-               case threeThere:
+               case caseThree:
                    if (rChar == 4)
                    {
                        nowState = allThere;
                        sendIt = true;
                    }
+                   if (rChar == 2)
+                        nowState = caseOne;
                    else
                        nowState = notThere;
                    break;
 
                case allThere:
                    nowState = notThere;
+                   sendIt=true;
                    break;
            }
 
