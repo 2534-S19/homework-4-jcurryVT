@@ -105,21 +105,26 @@ int main(void)
         switch (nowState) {
                case notThere:
                    if (rChar == 2)
-                       nowState = caseOne;
+                       nowState = caseOne; // moves on if there's a 2 and stays if not
+                   else
+                       nowState == notThere;
                    break;
 
                case caseOne:
                    if (rChar == 5)
-                       nowState = caseTwo;
+                       nowState = caseTwo; //moves on if sees a 5
+                   if (rChar == 2)
+                       nowState = caseOne; //goes back on itself to caseOne if sees 2
                    else
-                       nowState = notThere;
+                       nowState = notThere; //if not moves back to nothing
+
                    break;
 
                case caseTwo:
                    if (rChar == 3)
                        nowState = caseThree;
                    if (rChar == 2)
-                       nowState = caseOne;
+                       nowState = caseOne; //goes back to caseOne if sees 2
                    else
                        nowState = notThere;
                    break;
@@ -131,14 +136,15 @@ int main(void)
                        sendIt = true;
                    }
                    if (rChar == 2)
-                        nowState = caseOne;
+                        nowState = caseOne; //goes back to caseOne if sees 2
                    else
                        nowState = notThere;
                    break;
 
                case allThere:
-                   nowState = notThere;
                    sendIt=true;
+                   nowState = notThere; //starts again after it sends the value out
+
                    break;
            }
 
