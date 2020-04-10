@@ -55,7 +55,7 @@ int main(void)
     if (( UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG)) == EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG);
          //how do i use this
     {
-        rChar =
+        rChar = UART_receiveData(uint32_t moduleInstance); //RECEIVE function
     }
     else
         {
@@ -64,13 +64,18 @@ int main(void)
             // TODO: If an actual character was received, echo the character to the terminal AND use it to update the FSM.
             //       Check the transmit interrupt flag prior to transmitting the character.
     if (rChar != 0xFF)
+    {
+        if ((UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_TRANSMIT_FLAG) == EUSCI_A_UART_RECEIVE_TRANSMIT_FLAG)
+
         {
-        charFSM(rChar); //is this gonna check the character
+            rChar = //TRANSMIT function
+            charFSM(rChar); //is this gonna check the character
         }
+    }
 
     if (charFSM(rChar)==1)
                 {
-                    transmit == UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG);
+                    transmitFlag == UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG);
 
                     //make this a variable
 
@@ -79,7 +84,7 @@ int main(void)
             // TODO: If the FSM indicates a successful string entry, transmit the response string.
             //       Check the transmit interrupt flag prior to transmitting each character and moving on to the next one.
             //       Make sure to reset the success variable after transmission.
-
+        if (transmitFlag ==EUSCI_A_UART_RECEIVE_TRANSMIT_FLAG)
         }
     }
 
@@ -135,10 +140,11 @@ int main(void)
            if (sendIt)
            {
                //display the thing
+               UART_receiveData(uint32_t moduleInstance); //RECEIVE function is uart -> laptop cause this is dumb
            }
            else
            {
-               //keep looking
+               nowState=notThere;
            }
         return sendIt;
     }
