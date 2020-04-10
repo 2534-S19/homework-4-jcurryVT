@@ -1,6 +1,6 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include "homework4.h"
-#include "uart.h"
+
 typedef enum {notThere, caseOne, caseTwo, caseThree, allThere} stateMachine;
 
 int main(void)
@@ -55,7 +55,7 @@ int main(void)
     if (( UART_getInterruptStatus(EUSCI_A0_BASE,EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG)) == EUSCI_A_UART_RECEIVE_INTERRUPT_FLAG)
          //how do i use this
     {
-        rChar = UART_receiveData(uint32_t moduleInstance); //RECEIVE function
+        rChar = (UART_receiveData(EUSCI_A0_BASE)); //RECEIVE function
     }
     else
         {
@@ -84,7 +84,9 @@ int main(void)
             // TODO: If the FSM indicates a successful string entry, transmit the response string.
             //       Check the transmit interrupt flag prior to transmitting each character and moving on to the next one.
             //       Make sure to reset the success variable after transmission.
-        if (transmitFlag ==EUSCI_A_UART_RECEIVE_TRANSMIT_FLAG)
+        if (transmitFlag == EUSCI_A_UART_RECEIVE_TRANSMIT_FLAG)
+            rChar= UART_receiveData(EUSCI_A0_BASE); //RECEIVE function is uart -> laptop cause this is dumb
+
         }
     }
 
@@ -151,7 +153,7 @@ int main(void)
            if (sendIt)
            {
                //display the thing
-               UART_receiveData(uint32_t moduleInstance); //RECEIVE function is uart -> laptop cause this is dumb
+              rChar= UART_receiveData(EUSCI_A0_BASE); //RECEIVE function is uart -> laptop cause this is dumb
            }
            else
            {
